@@ -28,7 +28,7 @@ namespace ParkitectAssetEditor
 		/// </value>
 		public string Guid { get; set; }
 
-		
+
 		/// <summary>
 		/// Gets or sets the fence post GO.
 		/// </summary>
@@ -38,10 +38,10 @@ namespace ParkitectAssetEditor
 		[JsonIgnore]
 		public GameObject Product
 		{
-			get { return GameObjectHashMap.Instance.Get(Guid + ".product"); }
-			set { GameObjectHashMap.Instance.Set(Guid + ".product", value); }
+			get { return GameObjectHashMap.Instance.Get(Guid); }
+			set { GameObjectHashMap.Instance.Set(Guid, value); }
 		}
-		
+
 		//base
 		public string Name { get; set; }
 		public float Price { get; set; }
@@ -205,7 +205,7 @@ namespace ParkitectAssetEditor
 			EditorGUILayout.EndVertical();
 			EditorGUILayout.EndVertical();
 		}
-		
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Asset"/> class.
 		/// </summary>
