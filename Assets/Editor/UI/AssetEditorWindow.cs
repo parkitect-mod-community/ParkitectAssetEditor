@@ -45,6 +45,7 @@ namespace ParkitectAssetEditor.UI
 			new WaypointRenderer(),
 			new BoundingBoxRenderer(),
 			new TrainRenderer(),
+            new CarRenderer(),
 		};
 
 		private static string[] trackedRideNames = new[]
@@ -238,7 +239,7 @@ namespace ParkitectAssetEditor.UI
 			ProjectManager.AssetPack.Description = EditorGUILayout.TextArea(ProjectManager.AssetPack.Description, GUILayout.ExpandHeight(true));
 			EditorGUILayout.EndScrollView();
 			ProjectManager.AssetPack.OrderPriority = EditorGUILayout.IntField("Load Order Priority", ProjectManager.AssetPack.OrderPriority);
-			
+
 			GUILayout.Label("Assemblies", EditorStyles.boldLabel);
 			//adds a waypoint at (0,0,0) relative to the unity object
 			if (GUILayout.Button("Add Assembly"))
@@ -341,7 +342,8 @@ namespace ParkitectAssetEditor.UI
 				AssetType.FlatRide.ToString(),
 				AssetType.ImageSign.ToString(),
 				AssetType.Train.ToString(),
-                AssetType.Shop.ToString()
+                AssetType.Shop.ToString(),
+                AssetType.Car.ToString()
 			});
 			_selectedAsset.Price = EditorGUILayout.FloatField("Price:", _selectedAsset.Price);
 
@@ -380,51 +382,54 @@ namespace ParkitectAssetEditor.UI
             }
 
             // Type specific settings
-			switch (_selectedAsset.Type)
-			{
-				case AssetType.Wall:
-					DrawAssetWallDetailSection();
-					goto case AssetType.Deco;
-				case AssetType.Deco:
-					DrawAssetDecoDetailSection();
-					break;
-				case AssetType.Bench:
-					DrawAssetSeatingDetailSection();
-					GUILayout.Space(15);
-					DrawSeatsDetailSection(_selectedAsset.GameObject);
-					break;
-				case AssetType.Fence:
-					DrawAssetFenceDetailSection();
-					break;
-				case AssetType.Sign:
-					DrawAssetSignDetailSection();
-					break;
-				case AssetType.Tv:
-					DrawAssetTvDetailSection();
-					break;
-				case AssetType.ImageSign:
-					DrawAssetImageSignDetailSection();
-					goto case AssetType.Deco;
-				case AssetType.Train:
-					DrawAssetTrainDetailSection();
-					break;
-				case AssetType.FlatRide:
-					DrawAssetFlatRideDetailSection();
-					GUILayout.Space(15);
-					DrawBoundingBoxDetailSection();
-					GUILayout.Space(15);
-					DrawWaypointsDetailSection();
-					GUILayout.Space(15);
-					DrawSeatsDetailSection(_selectedAsset.GameObject);
-					break;
+            switch (_selectedAsset.Type)
+            {
+                case AssetType.Wall:
+                    DrawAssetWallDetailSection();
+                    goto case AssetType.Deco;
+                case AssetType.Deco:
+                    DrawAssetDecoDetailSection();
+                    break;
+                case AssetType.Bench:
+                    DrawAssetSeatingDetailSection();
+                    GUILayout.Space(15);
+                    DrawSeatsDetailSection(_selectedAsset.GameObject);
+                    break;
+                case AssetType.Fence:
+                    DrawAssetFenceDetailSection();
+                    break;
+                case AssetType.Sign:
+                    DrawAssetSignDetailSection();
+                    break;
+                case AssetType.Tv:
+                    DrawAssetTvDetailSection();
+                    break;
+                case AssetType.ImageSign:
+                    DrawAssetImageSignDetailSection();
+                    goto case AssetType.Deco;
+                case AssetType.Train:
+                    DrawAssetTrainDetailSection();
+                    break;
+                case AssetType.FlatRide:
+                    DrawAssetFlatRideDetailSection();
+                    GUILayout.Space(15);
+                    DrawBoundingBoxDetailSection();
+                    GUILayout.Space(15);
+                    DrawWaypointsDetailSection();
+                    GUILayout.Space(15);
+                    DrawSeatsDetailSection(_selectedAsset.GameObject);
+                    break;
                 case AssetType.Shop:
                     DrawShopProductSection();
                     GUILayout.Space(15);
                     DrawBoundingBoxDetailSection();
                     break;
-			}
+                case AssetType.Car:
+                    DrawCarSection();
+                    break;
+            }
 
-			GUILayout.Space(20);
+            GUILayout.Space(20);
 
 			if (GUILayout.Button("Remove From Asset Pack"))
 			{
@@ -866,7 +871,52 @@ namespace ParkitectAssetEditor.UI
 			_selectedAsset.AspectRatio = (AspectRatio)EditorGUILayout.Popup("Aspect ratio", (int)_selectedAsset.AspectRatio, AspectRatioUtility.aspectRatioNames);
 		}
 
-		/// <summary>
+        private void DrawCarSection()
+        {
+            if (_selectedAsset.GameObject == null) {
+                return;
+            }
+
+            GUILayout.Label("Car settings:", EditorStyles.boldLabel);
+            if (_selectedAsset.Car == null)
+            {
+                CoasterCar car = new CoasterCar("");
+                _selectedAsset.Car = car;
+            }
+
+            _selectedAsset.Car.SeatWaypointOffset = EditorGUILayout.FloatField("Seat waypoint offset:", _selectedAsset.Car.SeatWaypointOffset);
+            _selectedAsset.Car.OffsetFront = EditorGUILayout.FloatField("Offset front:", _selectedAsset.Car.OffsetFront);
+            _selectedAsset.Car.OffsetBack = EditorGUILayout.FloatField("Offset back:", _selectedAsset.Car.OffsetBack);
+
+            GUILayout.Space(15);
+
+            GUILayout.Label("Restraints", "PreToolbar");
+            for (int i = _selectedAsset.Car.Restraints.Count - 1; i >= 0; i--)
+            {
+                CoasterRestraints restraints = _selectedAsset.Car.Restraints[i];
+
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Label("#" + i);
+                if (GUILayout.Button("Delete"))
+                {
+                    _selectedAsset.Car.Restraints.RemoveAt(i);
+                }
+                EditorGUILayout.EndHorizontal();
+
+                restraints.TransformName = EditorGUILayout.TextField("Transform name", restraints.TransformName);
+                restraints.ClosedAngle = EditorGUILayout.FloatField("Closed angle (X-Axis)", restraints.ClosedAngle);
+            }
+
+            if (GUILayout.Button("Add"))
+            {
+                CoasterRestraints restraints = new CoasterRestraints();
+                restraints.TransformName = "restraint";
+                _selectedAsset.Car.Restraints.Add(restraints);
+            }
+            DrawSeatsDetailSection(_selectedAsset.GameObject);
+        }
+
+        /// <summary>
 		/// Draws the asset image sign detail section.
 		/// </summary>
 		private void DrawAssetTrainDetailSection()
@@ -875,7 +925,7 @@ namespace ParkitectAssetEditor.UI
 				return;
 			}
 
-			GUILayout.Label("Train settings:", EditorStyles.boldLabel);
+			GUILayout.Label("Car settings:", EditorStyles.boldLabel);
 
 			if (_selectedAsset.GameObject.transform.Find("backAxis") == null)
 			{

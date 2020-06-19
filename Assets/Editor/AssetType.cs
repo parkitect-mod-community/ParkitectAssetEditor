@@ -16,6 +16,7 @@
         FlatRide,
         ImageSign,
         Train,
-        Shop
+        Shop,
+        Car
     }
 }
