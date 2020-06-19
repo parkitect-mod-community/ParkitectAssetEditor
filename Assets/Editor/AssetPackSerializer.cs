@@ -71,10 +71,6 @@ namespace ParkitectAssetEditor
                 }
             };
 
-            switch (assetPack.)
-            {
-
-            }
 #if UNITY_STANDALONE_OSX
             BuildPipeline.BuildAssetBundles(ProjectManager.Project.Value.ModDirectory, descriptor, BuildAssetBundleOptions.ForceRebuildAssetBundle | BuildAssetBundleOptions.DeterministicAssetBundle | BuildAssetBundleOptions.UncompressedAssetBundle | BuildAssetBundleOptions.StrictMode, BuildTarget.StandaloneOSX);
 #elif UNITY_STANDALONE_WIN
