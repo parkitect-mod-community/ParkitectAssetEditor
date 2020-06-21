@@ -6,7 +6,7 @@
     public enum AssetType
     {
         Deco,
-		Wall,
+        Wall,
         Trashbin,
         Bench,
         Fence,
@@ -15,6 +15,8 @@
         Tv,
         FlatRide,
         ImageSign,
-        Train
+        Train,
+        Shop,
+        Car
     }
 }
