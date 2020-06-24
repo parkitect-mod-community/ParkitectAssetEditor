@@ -1,4 +1,4 @@
-﻿using UnityEditor;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -16,7 +16,7 @@ namespace ParkitectAssetEditor.GizmoRenderers
 
 		public bool CanRender(Asset asset)
 		{
-			return asset.Type == AssetType.FlatRide;
+			return asset.Type == AssetType.FlatRide || asset.Type == AssetType.Car;
 		}
 
 		public void Render(Asset asset)

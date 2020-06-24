@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -56,7 +56,10 @@ namespace ParkitectAssetEditor
                 }
                 else {
                     asset.LeadCar = null;
-                    asset.Car = null;
+                    if (asset.Type != AssetType.Car)
+                    {
+                        asset.Car = null;
+                    }
                     asset.RearCar = null;
                     prefabPaths.Add(CreatePrefab(asset.GameObject, asset.Guid));
                 }

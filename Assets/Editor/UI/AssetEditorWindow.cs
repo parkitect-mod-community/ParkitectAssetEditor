@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -426,6 +426,8 @@ namespace ParkitectAssetEditor.UI
                     break;
                 case AssetType.Car:
                     DrawCarSection();
+                    GUILayout.Space(15);
+                    DrawWaypointsDetailSection();
                     break;
             }
 
