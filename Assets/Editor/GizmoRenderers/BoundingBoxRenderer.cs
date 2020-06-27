@@ -9,7 +9,7 @@ namespace ParkitectAssetEditor.GizmoRenderers
 	{
 		public bool CanRender(Asset asset)
 		{
-			return asset.Type == AssetType.FlatRide || asset.Type == AssetType.Shop;
+			return asset.TargetType == AssetType.FlatRide || asset.TargetType == AssetType.Shop;
 		}
 
 		public void Render(Asset asset)

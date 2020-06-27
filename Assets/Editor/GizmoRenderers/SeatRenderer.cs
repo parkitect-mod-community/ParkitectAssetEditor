@@ -16,7 +16,7 @@
 		/// </returns>
 		public bool CanRender(Asset asset)
 		{
-			return asset.Type == AssetType.Bench || asset.Type == AssetType.FlatRide || asset.Type == AssetType.Car;
+			return asset.TargetType == AssetType.Bench || asset.TargetType == AssetType.FlatRide;
 		}
 
 		/// <inheritdoc />

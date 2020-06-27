@@ -22,7 +22,7 @@ namespace ParkitectAssetEditor.GizmoRenderers
         /// </returns>
         public bool CanRender(Asset asset)
         {
-            return asset.Type == AssetType.Wall || asset.Type == AssetType.Fence;
+            return asset.TargetType == AssetType.Wall || asset.TargetType == AssetType.Fence;
         }
 
         /// <inheritdoc />
@@ -33,7 +33,7 @@ namespace ParkitectAssetEditor.GizmoRenderers
         public void Render(Asset asset)
         {
             Vector3 offset = Vector3.zero;
-            if (asset.Type == AssetType.Fence) {
+            if (asset.TargetType == AssetType.Fence) {
                 offset = Vector3.forward / 2;
             }
 

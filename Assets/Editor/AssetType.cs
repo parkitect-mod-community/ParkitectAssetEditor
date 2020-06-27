@@ -17,6 +17,6 @@
         ImageSign,
         Train,
         Shop,
-        Car
+        Generic
     }
 }

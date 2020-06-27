@@ -17,7 +17,7 @@ namespace ParkitectAssetEditor.GizmoRenderers
         /// </returns>
         public bool CanRender(Asset asset)
         {
-            return asset.Type == AssetType.Sign;
+            return asset.TargetType == AssetType.Sign;
         }
 
         /// <summary>

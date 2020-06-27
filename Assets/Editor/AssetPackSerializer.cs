@@ -35,7 +35,7 @@ namespace ParkitectAssetEditor
             var prefabPaths = new List<string>();
             foreach (var asset in assetPack.Assets)
             {
-                if (asset.Type == AssetType.Train) {
+                if (asset.TargetType == AssetType.Train) {
                     if (asset.LeadCar != null) {
                         prefabPaths.Add(CreatePrefab(asset.LeadCar.GameObject, asset.LeadCar.Guid));
                     }
@@ -46,7 +46,7 @@ namespace ParkitectAssetEditor
                         prefabPaths.Add(CreatePrefab(asset.RearCar.GameObject, asset.RearCar.Guid));
                     }
                 }
-                else if (asset.Type == AssetType.Shop)
+                else if (asset.TargetType == AssetType.Shop)
                 {
                     foreach (var product in asset.Products)
                     {
@@ -56,10 +56,7 @@ namespace ParkitectAssetEditor
                 }
                 else {
                     asset.LeadCar = null;
-                    if (asset.Type != AssetType.Car)
-                    {
-                        asset.Car = null;
-                    }
+                    asset.Car = null;
                     asset.RearCar = null;
                     prefabPaths.Add(CreatePrefab(asset.GameObject, asset.Guid));
                 }
@@ -125,7 +122,7 @@ namespace ParkitectAssetEditor
                     }
                 }
 
-                if (asset.Type == AssetType.Train)
+                if (asset.TargetType == AssetType.Train)
                 {
                     if (asset.LeadCar != null && asset.LeadCar.GameObject == null)
                     {

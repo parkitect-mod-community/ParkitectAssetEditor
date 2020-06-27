@@ -16,7 +16,7 @@ namespace ParkitectAssetEditor.GizmoRenderers
 
 		public bool CanRender(Asset asset)
 		{
-			return asset.Type == AssetType.FlatRide || asset.Type == AssetType.Car;
+			return asset.TargetType == AssetType.FlatRide;
 		}
 
 		public void Render(Asset asset)
@@ -152,7 +152,7 @@ namespace ParkitectAssetEditor.GizmoRenderers
 				Vector3 worldPos = asset.Waypoints[x].Position + asset.GameObject.transform.position;
 
 				Handles.zTest = CompareFunction.LessEqual;
-				
+
 				if (Handles.Button(worldPos, Quaternion.identity, HandleUtility.GetHandleSize(worldPos) * 0.2f,
 					HandleUtility.GetHandleSize(worldPos) * 0.2f, Handles.SphereHandleCap))
 				{
