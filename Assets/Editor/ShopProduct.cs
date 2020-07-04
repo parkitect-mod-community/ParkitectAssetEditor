@@ -28,6 +28,15 @@ namespace ParkitectAssetEditor
 		/// </value>
 		public string Guid { get; set; }
 
+        //trash
+        /// <summary>
+        /// Gets or sets the unique identifier.
+        /// </summary>
+        /// <value>
+        /// The unique identifier.
+        /// </value>
+        public string TrashGuid { get; set; }
+
 
 		/// <summary>
 		/// Gets or sets the fence post GO.
@@ -42,7 +51,8 @@ namespace ParkitectAssetEditor
 			set { GameObjectHashMap.Instance.Set(Guid, value); }
 		}
 
-		//base
+
+        //base
 		public string Name { get; set; }
 		public float Price { get; set; }
 
@@ -67,12 +77,32 @@ namespace ParkitectAssetEditor
 		public Temperature Temprature { get; set; }
 		public int Portions { get; set; }
 
+        //trash
+        public float DisgustFactor = .5f;
+        public float Volume = .1f;
+        public bool CanWiggle = true;
+
+        /// <summary>
+        /// Gets or sets the fence post GO.
+        /// </summary>
+        /// <value>
+        /// The fence post GO.
+        /// </value>
+        [JsonIgnore]
+        public GameObject Trash
+        {
+            get { return GameObjectHashMap.Instance.Get(TrashGuid); }
+            set { GameObjectHashMap.Instance.Set(TrashGuid, value); }
+        }
+
 		[JsonIgnore] private Vector2 _scrollPos;
 		[JsonIgnore] private ShopIngredient _selected;
 
 
 		public virtual void ShopProductSection()
 		{
+            Event e = Event.current;
+
 			Name = EditorGUILayout.TextField("Name", Name);
 			Price = EditorGUILayout.FloatField("Price ", Price);
 			Product = EditorGUILayout.ObjectField("Product Object:", Product, typeof(GameObject), true) as GameObject;
@@ -86,37 +116,46 @@ namespace ParkitectAssetEditor
 				IsInterestingToLookAt = EditorGUILayout.Toggle("Is Interesting To Look At", IsInterestingToLookAt);
 			}
 
-			switch (ProductType)
-			{
-				case ProductType.ON_GOING:
-				{
-					Duration = EditorGUILayout.IntField("Duration ", Duration);
-					RemoveWhenDepleted = EditorGUILayout.Toggle("Remove When Depleted", RemoveWhenDepleted);
-					DestroyWhenDepleted = EditorGUILayout.Toggle("Destroy When Depleted", DestroyWhenDepleted);
-				}
-					break;
-				case ProductType.CONSUMABLE:
-				{
-					ConsumeAnimation =
-						(ConsumeAnimation) EditorGUILayout.EnumPopup("Consume Animation ", ConsumeAnimation);
-					Temprature = (Temperature) EditorGUILayout.EnumPopup("Temperature ", Temprature);
-					Portions = EditorGUILayout.IntField("Portions ", Portions);
-				}
-					break;
-				case ProductType.WEARABLE:
-				{
-					BodyLocation = (Body) EditorGUILayout.EnumPopup("Body Location ", BodyLocation);
-					SeasonalPreference = (Seasonal) EditorGUILayout.EnumPopup("Seasonal Preference ", SeasonalPreference);
-					TemperaturePreference =
-						(Temperature) EditorGUILayout.EnumPopup("Temperature Preference", TemperaturePreference);
-					HideHair = EditorGUILayout.Toggle("Hide Hair", HideHair);
-					HideOnRide = EditorGUILayout.Toggle("Hide On Ride", HideOnRide);
-				}
-					break;
-			}
+            switch (ProductType)
+            {
+                case ProductType.ON_GOING:
+                {
+                    Duration = EditorGUILayout.IntField("Duration ", Duration);
+                    RemoveWhenDepleted = EditorGUILayout.Toggle("Remove When Depleted", RemoveWhenDepleted);
+                    DestroyWhenDepleted = EditorGUILayout.Toggle("Destroy When Depleted", DestroyWhenDepleted);
+                }
+                    break;
+                case ProductType.CONSUMABLE:
+                {
+                    ConsumeAnimation =
+                        (ConsumeAnimation) EditorGUILayout.EnumPopup("Consume Animation ", ConsumeAnimation);
+                    Temprature = (Temperature) EditorGUILayout.EnumPopup("Temperature ", Temprature);
+                    Portions = EditorGUILayout.IntField("Portions ", Portions);
 
-			Event e = Event.current;
-			EditorGUILayout.LabelField("Ingredients:", EditorStyles.boldLabel);
+                    EditorGUILayout.LabelField("Trash:", EditorStyles.boldLabel);
+                    Trash = EditorGUILayout.ObjectField("Trash Objects:", Trash, typeof(GameObject), true) as GameObject;
+                    if (Trash != null) {
+                        DisgustFactor = EditorGUILayout.Slider("Disgust", DisgustFactor, 0f, 1f);
+                        Volume = EditorGUILayout.Slider("Volume", Volume, 0f, 1f);
+                        CanWiggle = EditorGUILayout.Toggle("Can Wiggle", CanWiggle);
+                    }
+                }
+                    break;
+                case ProductType.WEARABLE:
+                {
+                    BodyLocation = (Body) EditorGUILayout.EnumPopup("Body Location ", BodyLocation);
+                    SeasonalPreference =
+                        (Seasonal) EditorGUILayout.EnumPopup("Seasonal Preference ", SeasonalPreference);
+                    TemperaturePreference =
+                        (Temperature) EditorGUILayout.EnumPopup("Temperature Preference", TemperaturePreference);
+                    HideHair = EditorGUILayout.Toggle("Hide Hair", HideHair);
+                    HideOnRide = EditorGUILayout.Toggle("Hide On Ride", HideOnRide);
+                }
+                    break;
+            }
+
+
+            EditorGUILayout.LabelField("Ingredients:", EditorStyles.boldLabel);
 			EditorGUILayout.BeginHorizontal(GUILayout.Height(300));
 			EditorGUILayout.BeginVertical("ShurikenEffectBg", GUILayout.Width(150));
 			_scrollPos = EditorGUILayout.BeginScrollView(_scrollPos, GUILayout.Height(300));
@@ -171,7 +210,7 @@ namespace ParkitectAssetEditor
 
 				_selected.Name = EditorGUILayout.TextField("Ingredient Name ", _selected.Name);
 				_selected.Price = EditorGUILayout.FloatField("Price ", _selected.Price);
-				_selected.Amount = EditorGUILayout.FloatField("Amount ", _selected.Amount);
+                _selected.Amount = EditorGUILayout.FloatField("Amount (" + (int)(_selected.Amount * 100f) + ")", _selected.Amount);
 				_selected.Tweakable = EditorGUILayout.Toggle("Tweakable ", _selected.Tweakable);
 
 				for (int i = 0; i < _selected.Effects.Count; i++)
@@ -212,6 +251,7 @@ namespace ParkitectAssetEditor
 		public ShopProduct()
 		{
 			Guid = GUID.Generate().ToString(); // don't need the object, just make it a string immediately
+            TrashGuid = GUID.Generate().ToString();
 		}
 
 	}

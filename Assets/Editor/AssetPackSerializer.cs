@@ -50,6 +50,7 @@ namespace ParkitectAssetEditor
                 {
                     foreach (var product in asset.Products)
                     {
+                        prefabPaths.Add(CreatePrefab(product.Trash, product.TrashGuid));
                         prefabPaths.Add(CreatePrefab(product.Product, product.Guid));
                     }
                     prefabPaths.Add(CreatePrefab(asset.GameObject, asset.Guid));
