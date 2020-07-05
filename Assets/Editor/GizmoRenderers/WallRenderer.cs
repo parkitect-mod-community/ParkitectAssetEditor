@@ -22,7 +22,7 @@ namespace ParkitectAssetEditor.GizmoRenderers
         /// </returns>
         public bool CanRender(Asset asset)
         {
-            return asset.TargetType == AssetType.Wall || asset.TargetType == AssetType.Fence;
+            return asset.TargetType == AssetType.Wall || asset.TargetType == AssetType.Fence  || asset.TargetType == AssetType.Door;
         }
 
         /// <inheritdoc />

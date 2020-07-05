@@ -28,6 +28,8 @@ namespace ParkitectAssetEditor
         /// </value>
         public string Guid { get; set; }
 
+        public bool LoadAsset { get; set; }
+
         /// <summary>
         /// The name
         /// </summary>
@@ -437,6 +439,7 @@ namespace ParkitectAssetEditor
             MinSize = 1;
             MaxSize = 1;
             Height = 1;
+            LoadAsset = true;
             CanSeeThrough = true;
         }
     }

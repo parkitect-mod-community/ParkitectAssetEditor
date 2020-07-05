@@ -342,10 +342,11 @@ namespace ParkitectAssetEditor.UI
 				AssetType.ImageSign.ToString(),
 				AssetType.Train.ToString(),
                 AssetType.Shop.ToString(),
+                AssetType.Door.ToString(),
                 AssetType.Generic.ToString()
 			});
 			_selectedAsset.Price = EditorGUILayout.FloatField("Price:", _selectedAsset.Price);
-
+            _selectedAsset.LoadAsset = EditorGUILayout.Toggle("Load Asset: ", _selectedAsset.LoadAsset);
 
             if (_selectedAsset.TargetType != AssetType.Shop)
             {
@@ -385,6 +386,9 @@ namespace ParkitectAssetEditor.UI
             {
                 case AssetType.Wall:
                     DrawAssetWallDetailSection();
+                    goto case AssetType.Deco;
+                case AssetType.Door:
+                    _selectedAsset.WallSettings = (int) WallBlock.Back;
                     goto case AssetType.Deco;
                 case AssetType.Deco:
                     DrawAssetDecoDetailSection();
@@ -748,7 +752,7 @@ namespace ParkitectAssetEditor.UI
 		}
 
 
-		/// <summary>
+        /// <summary>
 		/// Draws the asset deco detail section.
 		/// </summary>
 		private void DrawAssetWallDetailSection()
