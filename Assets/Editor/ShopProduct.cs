@@ -1,3 +1,4 @@
+using System.Linq;
 using Newtonsoft.Json;
 using UnityEditor;
 
@@ -64,6 +65,41 @@ namespace ParkitectAssetEditor
         public List<ShopIngredient> Ingredients = new List<ShopIngredient>();
 
         public ProductType ProductType { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance has custom colors.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance has custom colors; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasCustomColors { get; set; }
+
+        /// <summary>
+        /// The colors
+        /// </summary>
+        [JsonIgnore] public Color[] Colors = new Color[4];
+
+        /// <summary>
+        /// Gets or sets the amount of custom colors this asset has.
+        /// </summary>
+        /// <value>
+        /// The color count.
+        /// </value>
+        public int ColorCount { get; set; }
+
+        /// <summary>
+        /// Property to support serializing for Unity's color struct
+        /// </summary>
+        public CustomColor[] CustomColors
+        {
+            get
+            {
+                return Colors.Select(c => new CustomColor {Red = c.r, Green = c.g, Blue = c.b, Alpha = c.a}).ToArray();
+            }
+            set { Colors = value.Select(c => new Color(c.Red, c.Green, c.Blue, c.Alpha)).ToArray(); }
+        }
+
 
         /// <summary>
         /// Gets or sets the unique identifier.
@@ -197,6 +233,16 @@ namespace ParkitectAssetEditor
                         (Temperature) EditorGUILayout.EnumPopup("Temperature Preference", TemperaturePreference);
                     HideHair = EditorGUILayout.Toggle("Hide Hair", HideHair);
                     HideOnRide = EditorGUILayout.Toggle("Hide On Ride", HideOnRide);
+
+                    HasCustomColors = EditorGUILayout.Toggle("Has custom colors: ", HasCustomColors);
+                    if (HasCustomColors)
+                    {
+                        ColorCount = Mathf.RoundToInt(EditorGUILayout.Slider("Color Count: ", ColorCount, 1, 4));
+                        for (int i = 0; i < ColorCount; i++)
+                        {
+                            Colors[i] = EditorGUILayout.ColorField("Color " + (i + 1), Colors[i]);
+                        }
+                    }
                 }
                     break;
             }
