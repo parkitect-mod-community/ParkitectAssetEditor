@@ -1,0 +1,25 @@
+{
+    "name": "com.parkitect-mod-community.asset-editor",
+    "displayName": "ParkitectAssetEditor",
+    "version": "1.2.2",
+    "unity": "2018.4",
+    "description": "Create mods for Parkitect.",
+    "keywords": [
+        "Parkitect",
+        "Modding"
+    ],
+    "samples": [
+        {
+            "displayName": "Parkitect Assets",
+            "description": "Refrence Assets from Parkitect.",
+            "path": "Samples~/ParkitectAssets"
+        }
+    ],
+    "dependencies": {
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/parkitect-mod-community/ParkitectAssetEditor.git",
+      "revision": "056218b431c430d2298f91a15b0ba8fe698da7f9"
+    }
+  }
