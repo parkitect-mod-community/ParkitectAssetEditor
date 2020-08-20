@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json.Utilities;
 using ParkitectAssetEditor.GizmoRenderers;
 using ParkitectAssetEditor.Utility;
 using UnityEditor;
@@ -30,6 +31,27 @@ namespace ParkitectAssetEditor.UI
 
         private ShopProduct _selectedProduct;
         private Vector2 _productScrollPosition;
+
+        private AssetType _type = AssetType.Deco;
+        private static readonly String[] AssetTypes = {
+            AssetType.Deco.ToString(),
+            AssetType.Wall.ToString(),
+            AssetType.Trashbin.ToString(),
+            AssetType.Bench.ToString(),
+            AssetType.Fence.ToString(),
+            AssetType.Lamp.ToString(),
+            AssetType.Sign.ToString(),
+            AssetType.Tv.ToString(),
+            AssetType.FlatRide.ToString(),
+            AssetType.ImageSign.ToString(),
+            AssetType.Train.ToString(),
+            AssetType.Shop.ToString(),
+            AssetType.Door.ToString(),
+            AssetType.Path.ToString(),
+            AssetType.Generic.ToString()
+        };
+
+
 
         /// <summary>
         /// The selected asset.
@@ -283,14 +305,32 @@ namespace ParkitectAssetEditor.UI
 		{
 			GUILayout.Label("Assets", "PreToolbar");
 
-			EditorGUILayout.HelpBox("Drag your GameObject to this field to start editing.", MessageType.Info);
+			// EditorGUILayout.HelpBox("Drag your GameObject to this field to start editing.", MessageType.Info);
 
 			// Game object drop box
-			var newAsset = EditorGUILayout.ObjectField("Drop to add:", null, typeof(GameObject), true) as GameObject;
-			if (newAsset != null && newAsset.scene.name != null) // scene name is null for prefabs, yay for unity for checking it this way
-			{
-				SelectAsset(ProjectManager.AssetPack.Add(newAsset));
-			}
+            //
+            EditorGUILayout.BeginHorizontal();
+            _type = (AssetType) Enum.Parse(typeof(AssetType),AssetTypes[EditorGUILayout.Popup( (int)_type, AssetTypes)]);
+            if (GUILayout.Button("Add"))
+            {
+                SelectAsset(ProjectManager.AssetPack.Add(new Asset
+                {
+                    Category = ProjectManager.Project.Value.ProjectName,
+                    SubCategory = "",
+                    TargetType = _type,
+                    SnapCenter = true,
+                    GridSubdivision = 1,
+                    HeightDelta = 0.25f
+                }));
+            }
+
+            EditorGUILayout.EndHorizontal();
+
+            // var newAsset = EditorGUILayout.ObjectField("Drop to add:", null, typeof(GameObject), true) as GameObject;
+			// if (newAsset != null && newAsset.scene.name != null) // scene name is null for prefabs, yay for unity for checking it this way
+			// {
+				// SelectAsset(ProjectManager.AssetPack.Add(newAsset));
+			// }
 
 			// Asset list
 			_assetListScrollPos = EditorGUILayout.BeginScrollView(_assetListScrollPos, "GroupBox", GUILayout.Height(200));
@@ -305,7 +345,7 @@ namespace ParkitectAssetEditor.UI
 					}
 				};
 
-				if (GUILayout.Button(asset.Name, style))
+				if (GUILayout.Button(asset.Name + " (" + asset.TargetType.ToString() + ")" , style))
 				{
 					SelectAsset(asset);
 				}
@@ -327,25 +367,29 @@ namespace ParkitectAssetEditor.UI
 
             // Name, type and price settings
 			GUILayout.Label("General:", EditorStyles.boldLabel);
-			_selectedAsset.Name = EditorGUILayout.TextField("Name", _selectedAsset.Name);
-			_selectedAsset.TargetType = (AssetType)EditorGUILayout.Popup("Type", (int)_selectedAsset.TargetType, new[]
-			{
-				AssetType.Deco.ToString(),
-				AssetType.Wall.ToString(),
-				AssetType.Trashbin.ToString(),
-				AssetType.Bench.ToString(),
-				AssetType.Fence.ToString(),
-				AssetType.Lamp.ToString(),
-				AssetType.Sign.ToString(),
-				AssetType.Tv.ToString(),
-				AssetType.FlatRide.ToString(),
-				AssetType.ImageSign.ToString(),
-				AssetType.Train.ToString(),
-                AssetType.Shop.ToString(),
-                AssetType.Door.ToString(),
-                AssetType.Generic.ToString()
-			});
-			_selectedAsset.Price = EditorGUILayout.FloatField("Price:", _selectedAsset.Price);
+			_selectedAsset.Name = EditorGUILayout.TextField("Name", _selectedAsset.Name );
+
+            if (_selectedAsset.TargetType != AssetType.Path)
+            {
+                var newAsset =
+                    EditorGUILayout.ObjectField("Object:", _selectedAsset.GameObject, typeof(GameObject), true) as
+                        GameObject;
+                if (newAsset != null && newAsset.scene.name != null
+                ) // scene name is null for prefabs, yay for unity for checking it this way
+                {
+                    _selectedAsset.GameObject = newAsset;
+                }
+            }
+
+            int targetIdx = AssetTypes.IndexOf(k => k.Equals(_selectedAsset.TargetType.ToString()));
+            targetIdx = EditorGUILayout.Popup("Type: ",targetIdx == -1 ? 0 : targetIdx, AssetTypes);
+            _selectedAsset.TargetType = (AssetType) Enum.Parse(typeof(AssetType), AssetTypes[targetIdx]);
+
+            if (_selectedAsset.TargetType != AssetType.Path)
+            {
+                _selectedAsset.Price = EditorGUILayout.FloatField("Price:", _selectedAsset.Price);
+            }
+
             _selectedAsset.LoadAsset = EditorGUILayout.Toggle("Load Asset: ", _selectedAsset.LoadAsset);
 
             if (_selectedAsset.TargetType != AssetType.Shop)
@@ -365,18 +409,21 @@ namespace ParkitectAssetEditor.UI
                     }
                 }
 
-                GUILayout.Label("Light settings", EditorStyles.boldLabel);
-                _selectedAsset.LightsTurnOnAtNight =
-                    EditorGUILayout.Toggle("Turn on at night: ", _selectedAsset.LightsTurnOnAtNight);
-                if (_selectedAsset.LightsTurnOnAtNight && _selectedAsset.HasCustomColors)
+                if (_selectedAsset.TargetType != AssetType.Path)
                 {
-                    _selectedAsset.LightsUseCustomColors = EditorGUILayout.Toggle("Use custom colors: ",
-                        _selectedAsset.LightsUseCustomColors);
-                    if (_selectedAsset.LightsUseCustomColors)
+                    GUILayout.Label("Light settings", EditorStyles.boldLabel);
+                    _selectedAsset.LightsTurnOnAtNight =
+                        EditorGUILayout.Toggle("Turn on at night: ", _selectedAsset.LightsTurnOnAtNight);
+                    if (_selectedAsset.LightsTurnOnAtNight && _selectedAsset.HasCustomColors)
                     {
-                        _selectedAsset.LightsCustomColorSlot =
-                            (int) (CustomColorSlot) EditorGUILayout.EnumPopup("Custom color slot:",
-                                (CustomColorSlot) _selectedAsset.LightsCustomColorSlot);
+                        _selectedAsset.LightsUseCustomColors = EditorGUILayout.Toggle("Use custom colors: ",
+                            _selectedAsset.LightsUseCustomColors);
+                        if (_selectedAsset.LightsUseCustomColors)
+                        {
+                            _selectedAsset.LightsCustomColorSlot =
+                                (int) (CustomColorSlot) EditorGUILayout.EnumPopup("Custom color slot:",
+                                    (CustomColorSlot) _selectedAsset.LightsCustomColorSlot);
+                        }
                     }
                 }
             }
@@ -392,6 +439,9 @@ namespace ParkitectAssetEditor.UI
                     goto case AssetType.Deco;
                 case AssetType.Deco:
                     DrawAssetDecoDetailSection();
+                    break;
+                case AssetType.Path:
+                    DrawPathSection();
                     break;
                 case AssetType.Bench:
                     DrawAssetSeatingDetailSection();
@@ -436,6 +486,31 @@ namespace ParkitectAssetEditor.UI
 				RemoveAsset(_selectedAsset);
 			}
 		}
+
+        private void DrawPathSection()
+        {
+            EditorGUILayout.LabelField("Material:", EditorStyles.boldLabel);
+            _selectedAsset.PathMaterialType = (Asset.PathMaterial) EditorGUILayout.Popup("Path Material Type: ",(int) _selectedAsset.PathMaterialType, new[]
+            {
+                Asset.PathMaterial.Tiled.ToString(),
+                Asset.PathMaterial.Sheet.ToString()
+            });
+
+            switch (_selectedAsset.PathMaterialType)
+            {
+                case Asset.PathMaterial.Tiled:
+                    _selectedAsset.PathSheet = EditorGUILayout.ObjectField("Texture: ", _selectedAsset.PathSheet, typeof(Texture2D)) as Texture2D;
+                    _selectedAsset.PathMask = EditorGUILayout.ObjectField("Mask: ", _selectedAsset.PathMask, typeof(Texture2D)) as Texture2D;
+                    // _selectedAsset.PathMask = EditorGUILayout.ObjectField("Texture: ", _selectedAsset.PathMask, typeof(Texture2D)) as Texture2D;
+
+
+                    break;
+                case Asset.PathMaterial.Sheet:
+                    _selectedAsset.PathSheet = EditorGUILayout.ObjectField("Texture: ", _selectedAsset.PathSheet, typeof(Texture2D)) as Texture2D;
+                    _selectedAsset.PathMask = EditorGUILayout.ObjectField("Mask: ", _selectedAsset.PathMask, typeof(Texture2D)) as Texture2D;
+                    break;
+            }
+        }
 
         /// <summary>
         /// Shop product
@@ -1023,20 +1098,26 @@ namespace ParkitectAssetEditor.UI
 			}
 		}
 
-		/// <summary>
-		/// Selects an asset to draw its settings
-		/// </summary>
-		/// <param name="asset">The asset.</param>
-		private void SelectAsset(Asset asset)
-		{
-			_selectedAsset = asset;
+        /// <summary>
+        /// Selects an asset to draw its settings
+        /// </summary>
+        /// <param name="asset">The asset.</param>
+        private void SelectAsset(Asset asset)
+        {
+            _selectedAsset = asset;
 
-			EditorGUIUtility.PingObject(_selectedAsset.GameObject.GetInstanceID());
+            if (_selectedAsset.GameObject != null)
+            {
+                EditorGUIUtility.PingObject(_selectedAsset.GameObject.GetInstanceID());
+                Selection.activeGameObject = _selectedAsset.GameObject;
+            }
+            else
+            {
+                Selection.activeObject = null;
+            }
+        }
 
-			Selection.activeGameObject = _selectedAsset.GameObject;
-		}
-
-		/// <summary>
+        /// <summary>
 		/// Removes an asset.
 		/// </summary>
 		/// <param name="asset">The asset.</param>

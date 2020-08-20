@@ -18,6 +18,7 @@
         Train,
         Shop,
         Door,
+        Path,
         Generic
     }
 }

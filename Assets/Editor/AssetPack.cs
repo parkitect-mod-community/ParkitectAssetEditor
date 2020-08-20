@@ -50,7 +50,7 @@ namespace ParkitectAssetEditor
         /// The archive setting. If true, assets should be archived with the mod to be uploaded to the workshop.
         /// </value>
         public bool ArchiveAssets { get; set; }
-        
+
         /// <summary>
         /// Adds the specified game object as an asset.
         /// </summary>
@@ -88,7 +88,7 @@ namespace ParkitectAssetEditor
         /// Adds the specified asset.
         /// </summary>
         /// <param name="asset">The asset.</param>
-        public void Add(Asset asset)
+        public Asset Add(Asset asset)
         {
             if (Assets.Contains(asset))
             {
@@ -99,11 +99,12 @@ namespace ParkitectAssetEditor
 
             asset.GameObject.SetActive(true);
 
-            GameObjectHashMap.Instance.Set(asset.Guid, asset.GameObject);
+            GameObjectHashMap.Instance.SetGameObject(asset.Guid, asset.GameObject);
 
             LayOutAssets();
+            return asset;
         }
-        
+
         /// <summary>
         /// Removes the specified asset.
         /// </summary>
@@ -117,7 +118,7 @@ namespace ParkitectAssetEditor
                 asset.GameObject.SetActive(false);
             }
 
-            GameObjectHashMap.Instance.Remove(asset.Guid);
+            GameObjectHashMap.Instance.RemoveGameObject(asset.Guid);
 
             LayOutAssets();
         }
