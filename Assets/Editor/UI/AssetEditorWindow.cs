@@ -489,6 +489,14 @@ namespace ParkitectAssetEditor.UI
 
         private void DrawPathSection()
         {
+
+            _selectedAsset.PathType = (Asset.PathTypes) EditorGUILayout.Popup("Path Type: ",(int) _selectedAsset.PathType, new[]
+            {
+                Asset.PathTypes.Employee.ToString(),
+                Asset.PathTypes.Normal.ToString(),
+                Asset.PathTypes.Queue.ToString()
+            });
+
             EditorGUILayout.LabelField("Material:", EditorStyles.boldLabel);
             _selectedAsset.PathMaterialType = (Asset.PathMaterial) EditorGUILayout.Popup("Path Material Type: ",(int) _selectedAsset.PathMaterialType, new[]
             {
@@ -501,13 +509,12 @@ namespace ParkitectAssetEditor.UI
                 case Asset.PathMaterial.Tiled:
                     _selectedAsset.PathSheet = EditorGUILayout.ObjectField("Texture: ", _selectedAsset.PathSheet, typeof(Texture2D)) as Texture2D;
                     _selectedAsset.PathMask = EditorGUILayout.ObjectField("Mask: ", _selectedAsset.PathMask, typeof(Texture2D)) as Texture2D;
-                    // _selectedAsset.PathMask = EditorGUILayout.ObjectField("Texture: ", _selectedAsset.PathMask, typeof(Texture2D)) as Texture2D;
-
-
+                    _selectedAsset.PathNormal = EditorGUILayout.ObjectField("Normals: ", _selectedAsset.PathNormal, typeof(Texture2D)) as Texture2D;
                     break;
                 case Asset.PathMaterial.Sheet:
                     _selectedAsset.PathSheet = EditorGUILayout.ObjectField("Texture: ", _selectedAsset.PathSheet, typeof(Texture2D)) as Texture2D;
                     _selectedAsset.PathMask = EditorGUILayout.ObjectField("Mask: ", _selectedAsset.PathMask, typeof(Texture2D)) as Texture2D;
+                    _selectedAsset.PathNormal = EditorGUILayout.ObjectField("Normals: ", _selectedAsset.PathNormal, typeof(Texture2D)) as Texture2D;
                     break;
             }
         }
