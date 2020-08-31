@@ -250,8 +250,8 @@ namespace ParkitectAssetEditor
         [JsonIgnore]
         public GameObject FencePost
         {
-            get { return GameObjectHashMap.Instance.Get(Guid + ".post"); }
-            set { GameObjectHashMap.Instance.Set(Guid + ".post", value); }
+            get { return GameObjectHashMap.Instance.GetGameObject(Guid + ".post"); }
+            set { GameObjectHashMap.Instance.SetGameObject(Guid + ".post", value); }
         }
 
         /// <summary>
@@ -289,8 +289,8 @@ namespace ParkitectAssetEditor
         [JsonIgnore]
         public GameObject Text
         {
-            get { return GameObjectHashMap.Instance.Get(Guid + ".text"); }
-            set { GameObjectHashMap.Instance.Set(Guid + ".text", value); }
+            get { return GameObjectHashMap.Instance.GetGameObject(Guid + ".text"); }
+            set { GameObjectHashMap.Instance.SetGameObject(Guid + ".text", value); }
         }
 
         #endregion
@@ -409,8 +409,49 @@ namespace ParkitectAssetEditor
         [JsonIgnore]
         public GameObject Screen
         {
-            get { return GameObjectHashMap.Instance.Get(Guid + ".screen"); }
-            set { GameObjectHashMap.Instance.Set(Guid + ".screen", value); }
+            get { return GameObjectHashMap.Instance.GetGameObject(Guid + ".screen") as GameObject; }
+            set { GameObjectHashMap.Instance.SetGameObject(Guid + ".screen", value); }
+        }
+
+        #endregion
+
+
+        #region path
+
+        public enum PathMaterial {
+            Tiled,
+            Sheet,
+            Custom
+        }
+
+        public enum PathTypes {
+            Employee,
+            Normal,
+            Queue
+        }
+
+        public PathTypes PathType = PathTypes.Normal;
+        public PathMaterial PathMaterialType = PathMaterial.Tiled;
+
+        [JsonIgnore]
+        public Texture2D PathSheet
+        {
+            get { return GameObjectHashMap.Instance.GetTexture(Guid + ".path_sheet") as Texture2D; }
+            set { GameObjectHashMap.Instance.SetTexture(Guid + ".path_sheet", value); }
+        }
+
+        [JsonIgnore]
+        public Texture2D PathMask
+        {
+            get { return GameObjectHashMap.Instance.GetTexture(Guid + ".path_mask") as Texture2D; }
+            set { GameObjectHashMap.Instance.SetTexture(Guid + ".path_mask", value); }
+        }
+
+        [JsonIgnore]
+        public Texture2D PathNormal
+        {
+            get { return GameObjectHashMap.Instance.GetTexture(Guid + ".path_normal") as Texture2D; }
+            set { GameObjectHashMap.Instance.SetTexture(Guid + ".path_normal", value); }
         }
 
         #endregion
@@ -426,8 +467,8 @@ namespace ParkitectAssetEditor
         [JsonIgnore]
         public GameObject GameObject
         {
-            get { return GameObjectHashMap.Instance.Get(Guid); }
-            set { GameObjectHashMap.Instance.Set(Guid, value); }
+            get { return GameObjectHashMap.Instance.GetGameObject(Guid) as GameObject;; }
+            set { GameObjectHashMap.Instance.SetGameObject(Guid, value); }
         }
 
         /// <summary>

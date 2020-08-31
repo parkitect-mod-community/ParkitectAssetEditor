@@ -128,8 +128,8 @@ namespace ParkitectAssetEditor
         [JsonIgnore]
         public GameObject Product
         {
-            get { return GameObjectHashMap.Instance.Get(Guid); }
-            set { GameObjectHashMap.Instance.Set(Guid, value); }
+            get { return GameObjectHashMap.Instance.GetGameObject(Guid); }
+            set { GameObjectHashMap.Instance.SetGameObject(Guid, value); }
         }
 
 
@@ -172,8 +172,8 @@ namespace ParkitectAssetEditor
         [JsonIgnore]
         public GameObject Trash
         {
-            get { return GameObjectHashMap.Instance.Get(TrashGuid); }
-            set { GameObjectHashMap.Instance.Set(TrashGuid, value); }
+            get { return GameObjectHashMap.Instance.GetGameObject(TrashGuid); }
+            set { GameObjectHashMap.Instance.SetGameObject(TrashGuid, value); }
         }
 
         [JsonIgnore] private Vector2 _scrollPos;

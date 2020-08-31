@@ -55,6 +55,12 @@ namespace ParkitectAssetEditor
                     }
                     prefabPaths.Add(CreatePrefab(asset.GameObject, asset.Guid));
                 }
+                else if (asset.TargetType == AssetType.Path)
+                {
+                    prefabPaths.Add(CreateTexture(asset.PathSheet, asset.Guid + ".path_sheet"));
+                    prefabPaths.Add(CreateTexture(asset.PathMask, asset.Guid + ".path_mask"));
+                    prefabPaths.Add(CreateTexture(asset.PathNormal, asset.Guid + ".path_normal"));
+                }
                 else {
                     asset.LeadCar = null;
                     asset.Car = null;
@@ -89,10 +95,38 @@ namespace ParkitectAssetEditor
 
             var path = string.Format("Assets/Resources/AssetPack/{0}.prefab", Guid);
 
-            PrefabUtility.CreatePrefab(path, gameObject);
+            PrefabUtility.SaveAsPrefabAsset(gameObject,path);
 
             return path;
         }
+
+        private static string CreateTexture(Texture2D texture2D, string Guid)
+        {
+            if (texture2D == null)
+            {
+                return null;
+            }
+
+            string currentTexturePath = AssetDatabase.GetAssetPath(texture2D);
+
+            TextureImporter importer = (TextureImporter) TextureImporter.GetAtPath(currentTexturePath);
+            importer.textureType = TextureImporterType.Default;
+            importer.textureCompression = TextureImporterCompression.Uncompressed;
+            importer.isReadable = true;
+
+            AssetDatabase.ImportAsset( importer.assetPath );
+            Texture2D inst = (Texture2D) AssetDatabase.LoadAssetAtPath(importer.assetPath, typeof(Texture2D));
+            EditorUtility.SetDirty(inst);
+            // Debug.Log(oldPath);
+            //
+            // Texture2D inst = Resources.Load<Texture2D>(oldPath);
+            string path = string.Format("Assets/Resources/AssetPack/{0}.png", Guid);
+            byte[] data = inst.EncodeToPNG();
+            Debug.Log(data.Length / 1024 + "Kb was saved as: " + path);
+            File.WriteAllBytes(path, inst.EncodeToPNG());
+            return path;
+        }
+
 
         /// <summary>
         /// Fills asset pack with gameobjects from the scene and/or prefabs.
@@ -118,8 +152,7 @@ namespace ParkitectAssetEditor
                     catch (System.Exception)
                     {
                         Debug.LogError(string.Format("Could not find GameObject at Assets/Resources/AssetPack/{0} for asset {1}, skipped loading of asset", asset.Guid, asset.Name));
-
-                        assetPack.Assets.Remove(asset);
+                        // assetPack.Assets.Remove(asset);
                     }
                 }
 

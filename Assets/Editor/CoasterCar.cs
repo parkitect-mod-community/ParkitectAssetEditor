@@ -11,8 +11,8 @@ namespace ParkitectAssetEditor
 		[JsonIgnore]
 		public GameObject GameObject
 		{
-			get { return GameObjectHashMap.Instance.Get(Guid); }
-			set { GameObjectHashMap.Instance.Set(Guid, value); }
+			get { return GameObjectHashMap.Instance.GetGameObject(Guid) as GameObject;; }
+			set { GameObjectHashMap.Instance.SetGameObject(Guid, value); }
 		}
 
         public float SeatWaypointOffset = 0.2f;
