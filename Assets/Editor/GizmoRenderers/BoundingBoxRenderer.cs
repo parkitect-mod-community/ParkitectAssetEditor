@@ -1,4 +1,4 @@
-﻿using ParkitectAssetEditor.Utility;
+using ParkitectAssetEditor.Utility;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;

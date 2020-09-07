@@ -31,6 +31,19 @@ namespace ParkitectAssetEditor
         public string Name { get; set; }
 
         /// <summary>
+        /// A unique id per build
+        /// </summary>
+        /// <value>
+        /// The unique identifier.
+        /// </value>
+        public string BuildGuid { get; set; }
+
+        /// <summary>
+        /// A user-readable version number
+        /// </summary>
+        public string VersionNumber { get; set; }
+
+        /// <summary>
         /// Gets or sets the description.
         /// </summary>
         /// <value>
@@ -187,6 +200,7 @@ namespace ParkitectAssetEditor
         {
             Assets = new List<Asset>();
             ArchiveAssets = true;
+            VersionNumber = "1.0";
         }
     }
 }

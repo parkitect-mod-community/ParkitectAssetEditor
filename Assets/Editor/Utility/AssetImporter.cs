@@ -7,9 +7,10 @@ namespace ParkitectAssetEditor.Utility
 		private void OnPreprocessModel()
 		{
 			var importer = assetImporter as ModelImporter;
-			
+
 			importer.materialName = ModelImporterMaterialName.BasedOnMaterialName;
 			importer.materialSearch = ModelImporterMaterialSearch.Everywhere;
+            importer.isReadable = true;
 		}
 	}
 }

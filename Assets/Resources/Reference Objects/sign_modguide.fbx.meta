@@ -1,7 +1,7 @@
 fileFormatVersion: 2
-guid: cefce2fbf9166d24fa7549cd8c7acbfb
+guid: 0b955a19f09c59a08a10640a4dd5eee6
 ModelImporter:
-  serializedVersion: 22
+  serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
     100002: SignTextPanel
@@ -18,12 +18,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: CustomColorsDiffuse
-    second: {fileID: 2100000, guid: 09831808cebc61d438871fe282b934c5, type: 2}
+    second: {fileID: 2100000, guid: c3f8e9d6bd88fd119b4566d6c0b316b3, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: SignTextMaterial
-    second: {fileID: 2100000, guid: 8c96c7b3766e91d469ecaa3badc73ae7, type: 2}
+    second: {fileID: 2100000, guid: 87aa158aa9c7e0877a30e63639742a32, type: 2}
   materials:
     importMaterials: 1
     materialName: 1
@@ -42,6 +42,7 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -56,6 +57,7 @@ ModelImporter:
     globalScale: 100
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -73,11 +75,16 @@ ModelImporter:
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
+    previousCalculatedGlobalScale: 1
+    hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
@@ -92,7 +99,6 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1

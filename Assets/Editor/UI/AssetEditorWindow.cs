@@ -71,43 +71,46 @@ namespace ParkitectAssetEditor.UI
 
 		private static string[] trackedRideNames = new[]
 		{
-			"Alpine Coaster",
-			"Boat Dark Ride",
-			"Boat Transport",
-			"Calm River Ride",
-			"Car Ride",
-			"Floorless Coaster",
-			"Flying Coaster",
-			"Gentle Monorail Ride",
-			"Ghost Mansion Ride",
-			"Giga Coaster",
-			"Hydraulically-Launched Coaster",
-			"Hyper Coaster",
-			"Inverted Coaster",
-			"Inverted Dark Ride",
-			"Inverting Spinning Coaster",
-			"Inverting Wooden Coaster",
-			"Junior Coaster",
-			"Log Flume",
-			"Mine Train Coaster",
-			"Miniature Railway",
-			"Mini Coaster",
-			"Mini Monorail",
-			"Monorail",
-			"Monorail Coaster",
-			"Powered Coaster",
-			"Spinning Coaster",
-			"Splash Battle",
-			"Stand-up Coaster",
-			"Steel Coaster",
-			"Submarines",
-			"Suspended Coaster",
-			"Suspended Monorail",
-			"Vertical Drop Coaster",
-			"Water Coaster",
-			"Wild Mouse",
-			"Wing Coaster",
-			"Wooden Coaster",
+            "Alpine Coaster",
+            "Boat Dark Ride",
+            "Boat Transport",
+            "Calm River Ride",
+            "Car Ride",
+            "Floorless Coaster",
+            "Flying Coaster",
+            "Gentle Monorail Ride",
+            "Ghost Mansion Ride",
+            "Giga Coaster",
+            "Hydraulically-Launched Coaster",
+            "Hyper Coaster",
+            "Inverted Coaster",
+            "Inverted Dark Ride",
+            "Inverting Spinning Coaster",
+            "Inverting Wooden Coaster",
+            "Junior Coaster",
+            "Log Flume",
+            "Mine Train Coaster",
+            "Miniature Railway",
+            "Mini Coaster",
+            "Mini Monorail",
+            "Monorail",
+            "Monorail Coaster",
+            "Pivot Coaster",
+            "Powered Coaster",
+            "Spinning Coaster",
+            "Splash Battle",
+            "Stand-up Coaster",
+            "Steel Coaster",
+            "Steeplechase",
+            "Submarines",
+            "Suspended Coaster",
+            "Suspended Monorail",
+            "Tilt Coaster",
+            "Vertical Drop Coaster",
+            "Water Coaster",
+            "Wild Mouse",
+            "Wing Coaster",
+            "Wooden Coaster",
 		};
 
 		[MenuItem("Window/Parkitect Asset Editor")]
@@ -289,6 +292,8 @@ namespace ParkitectAssetEditor.UI
 
 			EditorGUILayout.HelpBox("Stores your raw model files with the asset pack in an archive. Recommended: on", MessageType.Info);
 			ProjectManager.AssetPack.ArchiveAssets = EditorGUILayout.Toggle("Archive assets", ProjectManager.AssetPack.ArchiveAssets);
+
+            ProjectManager.AssetPack.VersionNumber = EditorGUILayout.TextField("Version number", ProjectManager.AssetPack.VersionNumber);
 
 			GUILayout.Space(10);
 
@@ -666,6 +671,18 @@ namespace ParkitectAssetEditor.UI
 			GUILayout.Label("Visibility settings", EditorStyles.boldLabel);
 			_selectedAsset.CanSeeThrough = EditorGUILayout.Toggle("Can see through: ", _selectedAsset.CanSeeThrough);
 			_selectedAsset.BlocksRain = EditorGUILayout.Toggle("Blocks rain: ", _selectedAsset.BlocksRain);
+
+            if (_selectedAsset.GameObject != null && _selectedAsset.GameObject.GetComponent<Animator>() != null)
+            {
+                GUILayout.Label("Animation trigger", EditorStyles.boldLabel);
+                _selectedAsset.EffectsTriggerEnabled =
+                    EditorGUILayout.Toggle("Animation can be triggered: ", _selectedAsset.EffectsTriggerEnabled);
+                if (_selectedAsset.EffectsTriggerEnabled)
+                {
+                    _selectedAsset.EffectsTriggerCustomizableDuration =
+                        EditorGUILayout.Toggle("Customizable duration: ", _selectedAsset.EffectsTriggerCustomizableDuration);
+                }
+            }
 		}
 
 
@@ -1071,6 +1088,22 @@ namespace ParkitectAssetEditor.UI
 			{
 				car.GameObject = newAsset;
 			}
+
+            car.CoasterCarType = (CoasterCarType)EditorGUILayout.EnumPopup("Type:", car.CoasterCarType);
+            if (car.CoasterCarType == CoasterCarType.Spinning)
+            {
+                car.SpinFriction = EditorGUILayout.Slider("Spin friction:", car.SpinFriction, 0f, 1f);
+                car.SpinStrength = Mathf.RoundToInt(EditorGUILayout.Slider("Spin strength:", car.SpinStrength / 100f, 0f, 1f) * 100);
+                car.SpinSymmetrySides = EditorGUILayout.IntField("Spin symmetry sides:", car.SpinSymmetrySides);
+            }
+            else if (car.CoasterCarType == CoasterCarType.Swinging)
+            {
+                car.SwingFriction = EditorGUILayout.Slider("Swing friction:", car.SwingFriction, 0f, 1f);
+                car.SwingStrength = EditorGUILayout.Slider("Swing strength:", car.SwingStrength, 0f, 1f);
+                car.SwingMaxAngle = EditorGUILayout.FloatField("Max swing angle:", car.SwingMaxAngle);
+                car.SwingArmLength = EditorGUILayout.FloatField("Swing arm length:", car.SwingArmLength);
+            }
+
 
 			car.SeatWaypointOffset = EditorGUILayout.FloatField("Seat waypoint offset:", car.SeatWaypointOffset);
 			car.OffsetFront = EditorGUILayout.FloatField("Offset front:", car.OffsetFront);

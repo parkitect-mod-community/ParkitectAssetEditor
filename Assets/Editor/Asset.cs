@@ -225,6 +225,9 @@ namespace ParkitectAssetEditor
         /// </value>
         public int LightsCustomColorSlot { get; set; }
 
+        public bool EffectsTriggerEnabled { get; set; }
+        public bool EffectsTriggerCustomizableDuration { get; set; }
+
         #endregion
 
         #region bench

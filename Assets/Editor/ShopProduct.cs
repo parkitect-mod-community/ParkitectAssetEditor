@@ -30,7 +30,7 @@ namespace ParkitectAssetEditor
 
     public enum ProductType
     {
-        ON_GOING,
+        ON_GOING, // can't add an ongoing product
         CONSUMABLE,
         WEARABLE
     }
@@ -188,7 +188,11 @@ namespace ParkitectAssetEditor
             Price = EditorGUILayout.FloatField("Price ", Price);
             Product = EditorGUILayout.ObjectField("Product Object:", Product, typeof(GameObject), true) as GameObject;
 
-            ProductType = (ProductType) EditorGUILayout.EnumPopup("Product Type", ProductType);
+            ProductType = (ProductType)( EditorGUILayout.Popup("Product Type", ((int)(ProductType - 1) < 0 ? 0 :  (int)(ProductType - 1)) , new []
+            {
+                ProductType.WEARABLE.ToString(),
+                ProductType.CONSUMABLE.ToString()
+            }) + 1);
 
             if (ProductType == ProductType.ON_GOING || ProductType == ProductType.CONSUMABLE)
             {
