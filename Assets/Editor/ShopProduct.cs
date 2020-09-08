@@ -190,8 +190,8 @@ namespace ParkitectAssetEditor
 
             ProductType = (ProductType)( EditorGUILayout.Popup("Product Type", ((int)(ProductType - 1) < 0 ? 0 :  (int)(ProductType - 1)) , new []
             {
-                ProductType.WEARABLE.ToString(),
-                ProductType.CONSUMABLE.ToString()
+                ProductType.CONSUMABLE.ToString(),
+                ProductType.WEARABLE.ToString()
             }) + 1);
 
             if (ProductType == ProductType.ON_GOING || ProductType == ProductType.CONSUMABLE)
