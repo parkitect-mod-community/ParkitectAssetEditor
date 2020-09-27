@@ -15,6 +15,15 @@ namespace ParkitectAssetEditor
     public class Asset
     {
 
+
+        public enum WalkableFlag
+        {
+            NOT_WALKABLE,
+            WALKABLE,
+            DIRECTIONAL,
+            FORWARD
+        }
+
         /// <summary>
         /// The type of asset
         /// </summary>
@@ -278,6 +287,7 @@ namespace ParkitectAssetEditor
         #region shop
 
         public List<ShopProduct> Products = new List<ShopProduct>();
+        public WalkableFlag Walkable = WalkableFlag.DIRECTIONAL;
 
         #endregion
 
@@ -420,6 +430,7 @@ namespace ParkitectAssetEditor
 
 
         #region path
+
 
         public enum PathMaterial {
             Tiled,

@@ -32,7 +32,8 @@ namespace ParkitectAssetEditor
     {
         ON_GOING, // can't add an ongoing product
         CONSUMABLE,
-        WEARABLE
+        WEARABLE,
+        BALLOON
     }
 
     public enum Seasonal
@@ -163,6 +164,11 @@ namespace ParkitectAssetEditor
         public float Volume = .1f;
         public bool CanWiggle = true;
 
+        //balloon
+        public float DefaultMass = 1.0f;
+        public float DefaultDrag = 0.0f;
+        public float DefaultAngularDrag = 0.05f;
+
         /// <summary>
         /// Gets or sets the fence post GO.
         /// </summary>
@@ -191,7 +197,8 @@ namespace ParkitectAssetEditor
             ProductType = (ProductType)( EditorGUILayout.Popup("Product Type", ((int)(ProductType - 1) < 0 ? 0 :  (int)(ProductType - 1)) , new []
             {
                 ProductType.CONSUMABLE.ToString(),
-                ProductType.WEARABLE.ToString()
+                ProductType.WEARABLE.ToString(),
+                ProductType.BALLOON.ToString()
             }) + 1);
 
             if (ProductType == ProductType.ON_GOING || ProductType == ProductType.CONSUMABLE)
@@ -247,6 +254,13 @@ namespace ParkitectAssetEditor
                             Colors[i] = EditorGUILayout.ColorField("Color " + (i + 1), Colors[i]);
                         }
                     }
+                }
+                    break;
+                case ProductType.BALLOON:
+                {
+                    DefaultMass = EditorGUILayout.FloatField("Default Mass", DefaultMass);
+                    DefaultDrag = EditorGUILayout.FloatField("Default Drag", DefaultDrag);
+                    DefaultAngularDrag = EditorGUILayout.FloatField("Default Angular Drag", DefaultAngularDrag);
                 }
                     break;
             }

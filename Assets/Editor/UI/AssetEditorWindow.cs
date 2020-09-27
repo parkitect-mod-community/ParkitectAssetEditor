@@ -532,6 +532,14 @@ namespace ParkitectAssetEditor.UI
 
             Event e = Event.current;
 
+            _selectedAsset.Walkable =  (Asset.WalkableFlag) EditorGUILayout.Popup("Walkable: ",(int) _selectedAsset.Walkable, new[]
+            {
+                Asset.WalkableFlag.NOT_WALKABLE.ToString(),
+                Asset.WalkableFlag.WALKABLE.ToString(),
+                Asset.WalkableFlag.DIRECTIONAL.ToString(),
+                Asset.WalkableFlag.FORWARD.ToString()
+            });
+
             GUILayout.Space(10);
             EditorGUILayout.LabelField("Products:", EditorStyles.boldLabel);
             _productScrollPosition =
